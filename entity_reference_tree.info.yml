@@ -1,0 +1,5 @@
+name: 'Entity Reference Tree'
+description: 'Provides a set of utilities for tracking entity references.'
+type: module
+core: 8.x
+version: 1.0

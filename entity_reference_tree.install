@@ -1,0 +1,110 @@
+<?php
+
+/**
+ * @file
+ * Installation, updates and schema definitions.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function entity_reference_tree_schema() {
+  $schema = [];
+  $schema['entity_reference_tree'] = [
+    'description' => 'Stores the entity reference information between the referencing and referenced entities.',
+    'fields' => [
+      'id' => [
+        'description' => 'The primary storage identifier.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'field_name' => [
+        'description' => 'The field machine name attached to the entity type bundle.',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'field_delta' => [
+        'description' => 'The delta.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'entity_type' => [
+        'description' => 'The "parent" entity type machine name. (e.g. node)',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'entity_bundle' => [
+        'description' => 'The "parent" entity type bundle machine name (e.g. article).',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'entity_id' => [
+        'description' => 'The "parent" entity identifier.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'entity_version_id' => [
+        'description' => 'The "parent" entity version identifier, assuming the parent entity is revisionable.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default' => 0,
+      ],
+      'referenced_entity_type' => [
+        'description' => 'The "child" entity type machine name. (e.g. media)',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'referenced_entity_bundle' => [
+        'description' => 'The "child" entity type bundle machine name (e.g. image).',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'referenced_entity_id' => [
+        'description' => 'The "child" entity identifier.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default' => 0,
+      ],
+      'referenced_entity_version_id' => [
+        'description' => 'The "child" entity version identifier, assuming the child entity is revisionable.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default' => 0,
+      ],
+    ],
+    'primary key' => ['id'],
+  ];
+  return $schema;
+}
+
+/**
+ * Alter the `referenced_entity_version_id`.
+ */
+function entity_reference_tree_update_8001() {
+  $schema = \Drupal::database()->schema();
+  $schema->changeField('entity_reference_tree', 'referenced_entity_version_id', 'referenced_entity_version_id', [
+    'description' => 'The "child" entity version identifier, assuming the child entity is revisionable.',
+    'type' => 'int',
+    'unsigned' => TRUE,
+    'not null' => FALSE,
+    'default' => 0,
+  ]);
+}

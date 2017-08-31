@@ -1,0 +1,71 @@
+<?php
+
+/**
+ * @file
+ * Provides a set of utilities for tracking entity references.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\ContentEntityInterface;
+
+/**
+ * Implements hook_entity_insert().
+ */
+function entity_reference_tree_entity_insert(EntityInterface $entity) {
+  if (entity_reference_tree_bypass_processing()) {
+    return;
+  }
+
+  if ($entity instanceof ContentEntityInterface) {
+    \Drupal::service('entity_reference_tree.manager')->entitySave($entity);
+  }
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function entity_reference_tree_entity_update(EntityInterface $entity) {
+  if (entity_reference_tree_bypass_processing()) {
+    return;
+  }
+
+  if ($entity instanceof ContentEntityInterface) {
+    \Drupal::service('entity_reference_tree.manager')->entitySave($entity);
+  }
+}
+
+/**
+ * Implements hook_entity_delete().
+ */
+function entity_reference_tree_entity_delete(EntityInterface $entity) {
+  if (entity_reference_tree_bypass_processing()) {
+    return;
+  }
+
+  if ($entity instanceof ContentEntityInterface) {
+    \Drupal::service('entity_reference_tree.manager')->entityDelete($entity);
+  }
+}
+
+/**
+ * Determines whether or not to bypass processing.
+ *
+ * Only bypasses processing on CLI (e.g., Drush) and the
+ * entity_reference_tree.bypass_on_cli state variable is truthy.
+ *
+ * To bypass processing on CLI:
+ *   drush state-set entity_reference_tree.bypass_on_cli 1
+ *
+ * To resume processing normally on CLI:
+ *   drush state-set entity_reference_tree.bypass_on_cli 0
+ *
+ * @return bool
+ *   Returns TRUE if processing should be bypassed or FALSE if not.
+ */
+function entity_reference_tree_bypass_processing() {
+  if (php_sapi_name() !== 'cli') {
+    return FALSE;
+  }
+
+  return (bool) \Drupal::state()->get('entity_reference_tree.bypass_on_cli', FALSE);
+}
