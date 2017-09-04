@@ -1,0 +1,10 @@
+{
+  "name": "amcgowanca/entity_reference_tree",
+  "description": "A proof-of-concept for building an entity reference tree in Drupal 8.",
+  "type": "drupal-module",
+  "license": "GPL-2.0+",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "required-dev": { },
+  "require": { }
+}
